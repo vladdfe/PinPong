@@ -33,35 +33,38 @@ class Player(GameSprite):
 
 
 #игровая сцена:
-back = (200, 255, 255) #цвет фона (background)
-win_width = 600
+
+win_width = 750
 win_height = 500
 window = display.set_mode((win_width, win_height))
-window.fill(back)
+background = transform.scale(image.load('rt.png'),(win_width, win_height))
 
 
 #флаги, отвечающие за состояние игры
 game = True
 finish = False
 clock = time.Clock()
-FPS = 60
+FPS = 115
 
 
 #создания мяча и ракетки   
-racket1 = Player('scale_1200.png', 30, 200, 4, 50, 150) 
-racket2 = Player('scale_1200.png', 520, 200, 4, 50, 150)
-ball = GameSprite('images-Photoroom.png-Photoroom.png', 200, 200, 4, 50, 50)
+racket1 = Player('scale_1200.png', -35, 170, 4, 150, 140) 
+racket2 = Player('scale_1200.png', 620, 170, 4, 150, 140)
+ball = GameSprite('images-Photoroom.png-Photoroom.png', 200, 200, 4, 85, 85)
 
 
 font.init()
-font = font.Font(None, 35)
-lose1 = font.render('PLAYER 1 LOSE!', True, (180, 0, 0))
-lose2 = font.render('PLAYER 2 LOSE!', True, (180, 0, 0))
+font = font.Font(None, 70)
+lose1 = font.render('PLAYER 1 LOSE!', True, (200, 0, 0))
+lose2 = font.render('PLAYER 2 LOSE!', True, (200, 0, 0))
 
 
 speed_x = 3
 speed_y = 3
 
+mixer.init()
+mixer.music.load('i.ogg')
+mixer.music.play()
 
 while game:
    for e in event.get():
@@ -69,7 +72,7 @@ while game:
            game = False
   
    if finish != True:
-       window.fill(back)
+       window.blit(background,(0,0))
        racket1.update_l()
        racket2.update_r()
        ball.rect.x += speed_x
@@ -88,16 +91,21 @@ while game:
        #если мяч улетел дальше ракетки, выводим условие проигрыша для первого игрока
        if ball.rect.x < 0:
            finish = True
-           window.blit(lose1, (200, 200))
+           window.blit(lose1, (185, 220))
            game_over = True
-
+           game_over = True
+           mixer.init()
+           mixer.music.load('o.ogg')
+           mixer.music.play()
 
        #если мяч улетел дальше ракетки, выводим условие проигрыша для второго игрока
        if ball.rect.x > win_width:
            finish = True
-           window.blit(lose2, (200, 200))
+           window.blit(lose2, (185, 220))
            game_over = True
-
+           mixer.init()
+           mixer.music.load('o.ogg')
+           mixer.music.play()
 
        racket1.reset()
        racket2.reset()
@@ -106,4 +114,6 @@ while game:
 
    display.update()
    clock.tick(FPS)
+
+
 
